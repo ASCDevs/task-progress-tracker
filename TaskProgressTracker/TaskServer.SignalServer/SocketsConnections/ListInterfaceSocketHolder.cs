@@ -25,8 +25,6 @@ namespace TaskServer.SignalServer.SocketsConnections
                 if (interfaces.TryAdd(idConnection,new UIListInterfaceConnection(webSocket,idConnection)))
                 {
                     _logger.LogInformation($"Interface Conectada! id - {idConnection}");
-                    //enviar atualização para interface das tarefas em andamento
-                    EchoAsycn(webSocket);
                 }
             }
             catch (Exception ex)
@@ -37,17 +35,29 @@ namespace TaskServer.SignalServer.SocketsConnections
 
         }
 
-        private async Task EchoAsycn(WebSocket webSocket)
-        {
-            
-        }
+        //private async Task EchoAsycn(WebSocket webSocket)
+        //{
+        //    try
+        //    {
+        //        byte[] butter = new byte[1024*];
+        //        while (true)
+        //        {
+        //            WebSocketReceiveResult result = await webSocket.ReceiveAsync( new ArraySegment<byte>)
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+
+        //        _logger.LogError("Erro ao observar interface conectada");
+        //    }
+        //}
 
         public int CountOnlineInterfaces()
         {
             throw new NotImplementedException();
         }
 
-        public async Task UpdateStatusTaskInterfaceList(UpdateTaskInfo updateInfo)
+        public async Task UpdateStatusTaskInterfaceList(TaskInfoView updateInfo)
         {
             throw new NotImplementedException();
         }

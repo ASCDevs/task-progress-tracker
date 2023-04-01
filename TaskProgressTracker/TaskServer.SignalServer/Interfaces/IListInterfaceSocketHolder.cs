@@ -5,7 +5,7 @@ namespace TaskServer.SignalServer.Interfaces
     public interface IListInterfaceSocketHolder
     {
         Task AddInterfaceList(HttpContext context);
-        Task UpdateStatusTaskInterfaceList(UpdateTaskInfo updateInfo);
+        Task UpdateStatusTaskInterfaceList(TaskInfoView updateInfo);
         int CountOnlineInterfaces();
 
 
