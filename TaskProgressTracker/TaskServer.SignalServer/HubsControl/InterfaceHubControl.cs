@@ -22,7 +22,6 @@ namespace TaskServer.SignalServer.HubsControl
         {
             try
             {
-                //await _interfacesHub.Clients.All.SendAsync("addMostRecentTask", string.Format("{0}\n", JsonSerializer.Serialize(task)));
                 await _interfacesHub.Clients.All.SendAsync("addMostRecentTask",task);
             }
             catch (Exception ex)

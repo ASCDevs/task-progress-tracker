@@ -1,8 +1,9 @@
-﻿namespace TaskServer.SignalServer.Interfaces
+﻿using TaskTracker.Domain.Entities;
+
+namespace TaskServer.SignalServer.Interfaces
 {
     public interface ITarefaHubControl
     {
-        Task AddTask();
         Task ChangeStatusTask();
         Task CompleteTask();
         Task GetAllTasks();

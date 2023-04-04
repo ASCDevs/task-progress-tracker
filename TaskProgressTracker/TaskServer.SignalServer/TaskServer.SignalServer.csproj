@@ -15,8 +15,4 @@
     <ProjectReference Include="..\TaskTracker.Domain\TaskTracker.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="HubsControl\" />
-  </ItemGroup>
-
 </Project>
