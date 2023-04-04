@@ -11,6 +11,7 @@ namespace TaskTracker.Domain
         public string IdTask { get; set; }
         public string TaskName { get; set; }
         public string DtSolicitacao { get; set; }
+        public string DtInicio { get; set; }
         public string DtFinalizacao { get; set; }
         public string Status { get; set; }
     }
