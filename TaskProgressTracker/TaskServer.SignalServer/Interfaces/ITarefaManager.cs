@@ -7,6 +7,7 @@ namespace TaskServer.SignalServer.Interfaces
     {
         bool AddTask(Tarefa task);
         bool StartTask(string idTarefa);
+        void UpdateTask(Tarefa task);
         bool ChangeTaskStatus(string idTarefa, string status);
         Tarefa CompleteTask(string idTarefa);
         List<TaskInfoView> GetListTaskInfo();

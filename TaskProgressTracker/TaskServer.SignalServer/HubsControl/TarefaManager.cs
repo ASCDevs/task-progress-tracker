@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using System.Threading.Tasks;
 using TaskServer.SignalServer.Hubs;
 using TaskServer.SignalServer.Interfaces;
 using TaskTracker.Domain;
@@ -31,6 +32,17 @@ namespace TaskServer.SignalServer.HubsControl
             return false;
         }
 
+        public void UpdateTask(Tarefa task)
+        {
+            Tarefa taskAtual;
+            if(tasks.TryGetValue(task.IdTarefa, out taskAtual)){
+                Tarefa taskAtualizada = task;
+
+                tasks.TryUpdate(task.IdTarefa, taskAtualizada, taskAtual);
+            }
+            _interfaceHubControl.UIUpdateTask(ConvertToTaskInfo(tasks[task.IdTarefa]));
+        }
+
         public bool StartTask(string idTarefa)
         {
             Tarefa taskToStart = tasks[idTarefa];
@@ -58,16 +70,22 @@ namespace TaskServer.SignalServer.HubsControl
 
         public Tarefa CompleteTask(string idTarefa)
         {
-            Tarefa finishedTask = tasks[idTarefa];
-            
+            Tarefa taskAtual;
+            Tarefa taskFinalizada;
 
-            if(!tasks.TryRemove(idTarefa,out finishedTask)) return null;
-            finishedTask.FimTarefa = DateTime.Now;
-            finishedTask.Status = "Concluído";
 
-            _interfaceHubControl.UIUpdateTask(ConvertToTaskInfo(tasks[idTarefa]));
+            if (tasks.TryGetValue(idTarefa, out taskAtual))
+            {
+                taskFinalizada = taskAtual;
+                taskFinalizada.FimTarefa = DateTime.Now;
+                taskFinalizada.Status = "Concluído";
 
-            return finishedTask;
+                tasks.TryUpdate(idTarefa, taskFinalizada, taskAtual);
+                _interfaceHubControl.UIUpdateTask(ConvertToTaskInfo(taskFinalizada));
+                return taskFinalizada;
+            }
+
+            return null;
         }
 
         public List<TaskInfoView> GetListTaskInfo()
@@ -76,7 +94,7 @@ namespace TaskServer.SignalServer.HubsControl
         }
         public Tarefa GetTaskNotInExecution()
         {
-            return tasks.FirstOrDefault(x => x.Value.InicioTarefa == null).Value;
+            return tasks.FirstOrDefault(x => x.Value.InicioTarefa == null && x.Value.FimTarefa == null).Value;
         }
 
         private TaskInfoView ConvertToTaskInfo(Tarefa task)

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using System.Net.WebSockets;
+using System.Threading.Tasks;
 using TaskServer.SignalServer.Interfaces;
 using TaskServer.SignalServer.SocketsConnections;
 using TaskTracker.Domain.Entities;
@@ -33,6 +34,44 @@ namespace TaskServer.SignalServer.Hubs
             }
 
 
+        }
+
+        public void AddTarefaTest()
+        {
+            _tarefaManager.AddTask(new Tarefa
+            {
+                IdTarefa = Guid.NewGuid().ToString(),
+                PedidoTarefa = DateTime.Now,
+                Status = "Solicitado"
+            });
+        }
+
+        public void CompleteTarefaTest()
+        {
+            var teste = _tarefaManager.GetTaskNotInExecution();
+            if (teste != null)
+            {
+                _tarefaManager.CompleteTask(teste.IdTarefa);
+            }
+        }
+
+        public void UpdateTarefaTest()
+        {
+            var teste = _tarefaManager.GetTaskNotInExecution();
+            if (teste != null)
+            {
+                if (teste.Status == "Solicitado")
+                {
+                    teste.Status = "Passo 1";
+                }
+                else
+                {
+                    int n = Int32.Parse(teste.Status.Substring(teste.Status.Length-1));
+                    n++;
+                    teste.Status = "Passo " + n;
+                }
+                _tarefaManager.UpdateTask(teste);
+            }
         }
 
         //Recebe a tarefa da API

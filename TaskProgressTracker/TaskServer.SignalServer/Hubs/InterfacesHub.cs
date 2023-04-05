@@ -23,7 +23,7 @@ namespace TaskServer.SignalServer.Hubs
                 await Clients.All.SendAsync("updateCountUIs", ChannelsForUIConnections._connectedUIs.Count);
                 await Clients.All.SendAsync("updateListaTarefas", _tarefaManager.GetListTaskInfo());
                 
-                _logger.LogInformation($"Interface foi conectada - {DateTime.Now}");
+                _logger.LogInformation($"Interface foi conectada - {DateTime.Now} - {Context.ConnectionId}");
 
                 await base.OnConnectedAsync();
             }
@@ -31,6 +31,24 @@ namespace TaskServer.SignalServer.Hubs
             {
                 _logger.LogError($"Erro na conexão do Hub de interfaces - [{ex.Message}]");
             }
+        }
+
+        public override async Task OnDisconnectedAsync(Exception? exception)
+        {
+            try
+            {
+                ChannelsForUIConnections._connectedUIs.Remove(Context.ConnectionId);
+                _logger.LogInformation($"Interface desconectada - {DateTime.Now} - {Context.ConnectionId}");
+                await Clients.All.SendAsync("updateCountUIs", ChannelsForUIConnections._connectedUIs.Count);
+                //Notificar desconexão de server da tarefa hub
+
+                await base.OnConnectedAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(" Erro ao desconectar Interface Hub (" + DateTime.Now + "), Erro: " + ex.Message);
+            }
+
         }
     }
 }
