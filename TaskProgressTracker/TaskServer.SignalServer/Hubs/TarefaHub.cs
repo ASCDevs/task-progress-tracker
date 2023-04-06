@@ -3,6 +3,7 @@ using System.Net.WebSockets;
 using System.Threading.Tasks;
 using TaskServer.SignalServer.Interfaces;
 using TaskServer.SignalServer.SocketsConnections;
+using TaskTracker.Domain;
 using TaskTracker.Domain.Entities;
 
 namespace TaskServer.SignalServer.Hubs
@@ -32,8 +33,12 @@ namespace TaskServer.SignalServer.Hubs
             {
                 _logger.LogError(" Erro ao receber conexão na Tarefa Hub (" + DateTime.Now + "), Erro: " + ex.Message);
             }
+        }
 
 
+        public List<TaskInfoView> GetTarefas()
+        {
+            return _tarefaManager.GetListTaskInfo();
         }
 
         public void AddTarefaTest()

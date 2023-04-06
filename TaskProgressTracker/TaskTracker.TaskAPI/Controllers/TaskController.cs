@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using TaskTracker.Domain;
 using TaskTracker.Domain.Contracts;
 using TaskTracker.Domain.Entities;
 using TaskTracker.Persistence;
+using TaskTracker.TaskAPI.Hubs;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -12,18 +14,18 @@ namespace TaskTracker.TaskAPI.Controllers
     public class TaskController : ControllerBase
     {
         private readonly ILogger<TaskController> _logger;
+        private readonly IConnectionTaskServer _taskServer;
 
-        public TaskController(ILogger<TaskController> logger)
+        public TaskController(ILogger<TaskController> logger, IConnectionTaskServer taskServer)
         {
             _logger = logger;
+            _taskServer = taskServer;
         }
         // GET: api/<TaskController>
         [HttpGet]
-        public List<Tarefa> Get()
+        public async Task<List<TaskInfoView>> Get()
         {
-            List<Tarefa> tarefas = new List<Tarefa>();
-            tarefas = TasksEmExecucao.TaskList.Select(t => t.Value).ToList();
-            return tarefas;
+            return await _taskServer.GetTasksOn();
         }
 
         // GET api/<TaskController>/5
@@ -38,14 +40,7 @@ namespace TaskTracker.TaskAPI.Controllers
         [HttpPost]
         public void Post([FromBody] TarefaRequest tarefa)
         {
-            string idGuid = Guid.NewGuid().ToString();
-            TasksEmExecucao.TaskList.TryAdd(idGuid, new Tarefa
-            {
-                IdTarefa = idGuid,
-                NomeTarefa = tarefa.NomeTarefa,
-                PedidoTarefa = DateTime.Now,
-                Status = "Solicitado"
-            });
+            _taskServer.AddTaskTeste();
         }
 
         // PUT api/<TaskController>/5
