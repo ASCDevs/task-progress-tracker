@@ -2,8 +2,8 @@
 using TaskTracker.Domain;
 using TaskTracker.Domain.Contracts;
 using TaskTracker.Domain.Entities;
-using TaskTracker.Persistence;
-using TaskTracker.TaskAPI.Hubs;
+using TaskTracker.Infrastructure.ConnectionsServices;
+using TaskTracker.Infrastructure.Interfaces;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -32,8 +32,8 @@ namespace TaskTracker.TaskAPI.Controllers
         [HttpGet("{id}")]
         public Tarefa Get(string id)
         {
-            Tarefa tarefa = TasksEmExecucao.TaskList.FirstOrDefault(t => t.Value.IdTarefa == id).Value;
-            return tarefa;
+            //Tarefa tarefa = TasksEmExecucao.TaskList.FirstOrDefault(t => t.Value.IdTarefa == id).Value;
+            return null;
         }
 
         // POST api/<TaskController>
@@ -54,18 +54,18 @@ namespace TaskTracker.TaskAPI.Controllers
         [HttpDelete("{id}")]
         public Tarefa Delete(string id)
         {
-            Tarefa tarefaRemovida;
-            if (TasksEmExecucao.TaskList.TryRemove(id, out tarefaRemovida)){
-                return tarefaRemovida;
-            }
+            //Tarefa tarefaRemovida;
+            //if (TasksEmExecucao.TaskList.TryRemove(id, out tarefaRemovida)){
+            //    return tarefaRemovida;
+            //}
 
-            return tarefaRemovida;
+            return null;
         }
 
         [HttpGet("total")]
         public int TotalTarefas()
         {
-            return TasksEmExecucao.CountTasks();
+            return _taskServer.CountTasks();
         }
     }
 }

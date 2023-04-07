@@ -1,8 +1,14 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using TaskTracker.Domain;
-using TaskTracker.TaskAPI.Controllers;
+using TaskTracker.Infrastructure.Interfaces;
+using Microsoft.Extensions.Logging;
 
-namespace TaskTracker.TaskAPI.Hubs
+namespace TaskTracker.Infrastructure.ConnectionsServices
 {
     public class ConnectionTaskServer : IConnectionTaskServer
     {
@@ -25,7 +31,7 @@ namespace TaskTracker.TaskAPI.Hubs
             }
             catch (Exception ex)
             {
-                _logger.LogError("Erro API > Signal : "+ex.Message);
+                _logger.LogError("Erro API > Signal : " + ex.Message);
             }
         }
 
@@ -34,13 +40,18 @@ namespace TaskTracker.TaskAPI.Hubs
             List<TaskInfoView> result = new();
             try
             {
-               return await _connection.InvokeAsync<List<TaskInfoView>>("GetTarefas");
+                return await _connection.InvokeAsync<List<TaskInfoView>>("GetTarefas");
             }
             catch (Exception ex)
             {
                 _logger.LogError("Erro API > Signal : " + ex.Message);
             }
             return result;
+        }
+
+        public int CountTasks()
+        {
+            return _connection.InvokeAsync<List<TaskInfoView>>("GetTarefas").Result.Count; ;
         }
     }
 }

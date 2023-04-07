@@ -1,4 +1,5 @@
-using TaskTracker.TaskAPI.Hubs;
+using TaskTracker.Infrastructure.ConnectionsServices;
+using TaskTracker.Infrastructure.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
