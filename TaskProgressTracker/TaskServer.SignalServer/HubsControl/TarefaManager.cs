@@ -13,6 +13,7 @@ namespace TaskServer.SignalServer.HubsControl
         private readonly IInterfaceHubControl _interfaceHubControl;
         private readonly ConcurrentDictionary<string, Tarefa> tasks = new();
         private readonly ILogger<TarefaManager> _logger;
+        private const int nrTasksPerCall = 3;
 
         public TarefaManager(ITarefaHubControl tarefaHubControl, IInterfaceHubControl interfaceHubControl, ILogger<TarefaManager> logger)
         {
@@ -34,25 +35,29 @@ namespace TaskServer.SignalServer.HubsControl
 
         public void UpdateTask(Tarefa task)
         {
-            Tarefa taskAtual;
-            if(tasks.TryGetValue(task.IdTarefa, out taskAtual)){
-                Tarefa taskAtualizada = task;
+            Tarefa taskInList;
+            if(tasks.TryGetValue(task.IdTarefa, out taskInList)){
 
-                tasks.TryUpdate(task.IdTarefa, taskAtualizada, taskAtual);
+                if(tasks.TryUpdate(task.IdTarefa, task, taskInList)){
+                    _interfaceHubControl.UIUpdateTask(ConvertToTaskInfo(tasks[task.IdTarefa]));
+                }
             }
-            _interfaceHubControl.UIUpdateTask(ConvertToTaskInfo(tasks[task.IdTarefa]));
         }
 
-        public bool StartTask(string idTarefa)
+        public bool StartTask(Tarefa tarefa)
         {
-            Tarefa taskToStart = tasks[idTarefa];
-            taskToStart.InicioTarefa = DateTime.Now;
-            taskToStart.Status = "Em progresso - Fase 1";
-            if(tasks.TryUpdate(idTarefa, taskToStart, tasks[idTarefa]))
+            Tarefa taskInList;
+            tasks.TryGetValue(tarefa.IdTarefa, out taskInList);
+
+            if(taskInList != null)
             {
-                _interfaceHubControl.UIUpdateTask(ConvertToTaskInfo(tasks[idTarefa]));
-                return true;
+                if (tasks.TryUpdate(tarefa.IdTarefa, tarefa, taskInList))
+                {
+                    _interfaceHubControl.UIUpdateTask(ConvertToTaskInfo(tarefa));
+                    return true;
+                }
             }
+            
             return false ;
         }
 
@@ -68,24 +73,18 @@ namespace TaskServer.SignalServer.HubsControl
             return false;
         }
 
-        public Tarefa CompleteTask(string idTarefa)
+        public void CompleteTask(Tarefa task)
         {
-            Tarefa taskAtual;
-            Tarefa taskFinalizada;
+            Tarefa taskInList;
 
-
-            if (tasks.TryGetValue(idTarefa, out taskAtual))
+            if (tasks.TryGetValue(task.IdTarefa, out taskInList))
             {
-                taskFinalizada = taskAtual;
-                taskFinalizada.FimTarefa = DateTime.Now;
-                taskFinalizada.Status = "Concluído";
 
-                tasks.TryUpdate(idTarefa, taskFinalizada, taskAtual);
-                _interfaceHubControl.UIUpdateTask(ConvertToTaskInfo(taskFinalizada));
-                return taskFinalizada;
+                if(tasks.TryUpdate(task.IdTarefa, task, taskInList))
+                {
+                    _interfaceHubControl.UIUpdateTask(ConvertToTaskInfo(task));
+                }
             }
-
-            return null;
         }
 
         public List<TaskInfoView> GetListTaskInfo()
@@ -95,6 +94,11 @@ namespace TaskServer.SignalServer.HubsControl
         public Tarefa GetTaskNotInExecution()
         {
             return tasks.FirstOrDefault(x => x.Value.InicioTarefa == null && x.Value.FimTarefa == null).Value;
+        }
+
+        public List<Tarefa> GetTasksNotInExecution()
+        {
+            return tasks.Where(t => t.Value.InicioTarefa == null && t.Value.FimTarefa == null).Select(x => x.Value).Take(3).ToList();
         }
 
         private TaskInfoView ConvertToTaskInfo(Tarefa task)

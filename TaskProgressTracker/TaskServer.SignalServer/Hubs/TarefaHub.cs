@@ -56,7 +56,7 @@ namespace TaskServer.SignalServer.Hubs
             var teste = _tarefaManager.GetTaskNotInExecution();
             if (teste != null)
             {
-                _tarefaManager.CompleteTask(teste.IdTarefa);
+                _tarefaManager.CompleteTask(teste);
             }
         }
 
@@ -88,7 +88,17 @@ namespace TaskServer.SignalServer.Hubs
 
         public void StartTarefa(Tarefa task)
         {
-            _tarefaManager.StartTask(task.IdTarefa);
+            _tarefaManager.StartTask(task);
+        }
+
+        public void UpdateTarefa(Tarefa task)
+        {
+            _tarefaManager.UpdateTask(task);
+        }
+
+        public void CompleteTarefa(Tarefa task)
+        {
+            _tarefaManager.CompleteTask(task);
         }
 
         public Tarefa GetTarefaToExecute()
@@ -102,14 +112,6 @@ namespace TaskServer.SignalServer.Hubs
 
             _logger.LogError($"Erro change task status: {status} - id: {idTarefa}");
 
-            return false;
-        }
-
-        public bool CompleteTask(string idTarefa)
-        {
-            if(_tarefaManager.CompleteTask(idTarefa) != null) return true;
-
-            _logger.LogError($"Erro complete task: {idTarefa}");
             return false;
         }
 

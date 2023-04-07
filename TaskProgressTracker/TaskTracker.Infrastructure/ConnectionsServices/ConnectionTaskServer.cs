@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using TaskTracker.Domain;
 using TaskTracker.Infrastructure.Interfaces;
 using Microsoft.Extensions.Logging;
+using TaskTracker.Domain.Entities;
 
 namespace TaskTracker.Infrastructure.ConnectionsServices
 {
@@ -18,7 +19,6 @@ namespace TaskTracker.Infrastructure.ConnectionsServices
 
         public ConnectionTaskServer(ILogger<ConnectionTaskServer> logger)
         {
-
             _connection = new HubConnectionBuilder().WithUrl(url).Build();
             _connection.StartAsync();
         }
@@ -35,7 +35,17 @@ namespace TaskTracker.Infrastructure.ConnectionsServices
             }
         }
 
-        public async Task<List<TaskInfoView>> GetTasksOn()
+        public async void StartTask(Tarefa tarefa)
+        {
+            await _connection.InvokeAsync("StartTarefa",tarefa);
+        }
+
+        public async void UpdateTask(Tarefa tarefa)
+        {
+            await _connection.InvokeAsync("UpdateTarefa", tarefa);
+        }
+
+        public async Task<List<TaskInfoView>> GetTasksOnInfoView()
         {
             List<TaskInfoView> result = new();
             try
@@ -52,6 +62,16 @@ namespace TaskTracker.Infrastructure.ConnectionsServices
         public int CountTasks()
         {
             return _connection.InvokeAsync<List<TaskInfoView>>("GetTarefas").Result.Count; ;
+        }
+
+        public async Task<List<Tarefa>> GetTasksObj()
+        {
+            return await _connection.InvokeAsync<List<Tarefa>>("GetTarefasToDo");
+        }
+
+        public async void CompleteTask(Tarefa tarefa)
+        {
+            await _connection.InvokeAsync("");
         }
     }
 }

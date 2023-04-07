@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime;
 using System.Text;
 using System.Threading.Tasks;
+using TaskTracker.Domain;
+using TaskTracker.Domain.Entities;
 using TaskTracker.Infrastructure.Interfaces;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace TaskTracker.BackgroundTasks
 {
@@ -20,23 +24,32 @@ namespace TaskTracker.BackgroundTasks
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                string guidTask = Guid.NewGuid().ToString(); 
-                _logger.LogInformation($"Checagem de tarefas: ativas({_taskServer.CountTasks()}) {DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss:ff")}");
-                _logger.LogInformation($"Inicio tarefa ({guidTask}) {DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss:ff")} ");
-
-                new Task(() =>
-                {
-                   DoTask(guidTask);
-                }).Start();
-                await Task.Delay(5000);
+                List<Tarefa> tasksToDo = _taskServer.GetTasksObj().Result; 
+                Parallel.ForEach(tasksToDo, tarefa => DoTask(tarefa));
+                await Task.Delay(15000);
             }
         }
 
-        private async void DoTask(string guidTask)
+        private async void DoTask(Tarefa tarefa)
         {
-            _logger.LogInformation($"Doing... - Entrada da task {guidTask}");
-            await Task.Delay(15000);
-            _logger.LogInformation($"Finish - Saida da task {guidTask} {DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss:ff")}");
+            Random rdn = new Random();
+            int[] intervalos = new int[] { 15000, 30000, 60000, 20000 };
+
+            tarefa.InicioTarefa = DateTime.Now;
+            tarefa.Status = "Em progresso - Fase 1";
+
+            _taskServer.StartTask(tarefa);
+            await Task.Delay(intervalos[rdn.Next(intervalos.Length)]);
+            for (int i = 0;i < rdn.Next(intervalos.Length); i++)
+            {
+                int nFase = Int32.Parse(tarefa.Status.Substring(tarefa.Status.Length - 1));
+                tarefa.Status = $"Em progesso - Fase{nFase}";
+                _taskServer.UpdateTask(tarefa);
+                await Task.Delay(intervalos[rdn.Next(intervalos.Length)]);
+            }
+
+            tarefa.Status = "Concluído";
+            _taskServer.CompleteTask(tarefa);
         }
     }
 }

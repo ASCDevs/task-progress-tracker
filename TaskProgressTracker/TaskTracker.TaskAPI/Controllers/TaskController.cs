@@ -25,7 +25,7 @@ namespace TaskTracker.TaskAPI.Controllers
         [HttpGet]
         public async Task<List<TaskInfoView>> Get()
         {
-            return await _taskServer.GetTasksOn();
+            return await _taskServer.GetTasksOnInfoView();
         }
 
         // GET api/<TaskController>/5
