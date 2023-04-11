@@ -12,5 +12,6 @@ namespace TaskServer.SignalServer.Interfaces
         void CompleteTask(Tarefa task);
         List<TaskInfoView> GetListTaskInfo();
         Tarefa GetTaskNotInExecution();
+        List<Tarefa> GetTasksNotInExecution();
     }
 }

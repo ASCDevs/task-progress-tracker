@@ -40,7 +40,11 @@ namespace TaskTracker.TaskAPI.Controllers
         [HttpPost]
         public void Post([FromBody] TarefaRequest tarefa)
         {
-            _taskServer.AddTaskTeste();
+
+            _taskServer.AddTarefa(new Tarefa
+            {
+                NomeTarefa = tarefa.NomeTarefa
+            });
         }
 
         // PUT api/<TaskController>/5

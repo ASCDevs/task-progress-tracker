@@ -35,30 +35,17 @@ namespace TaskServer.SignalServer.Hubs
             }
         }
 
+        public List<Tarefa> GetTarefasToDo()
+        {
+            return _tarefaManager.GetTasksNotInExecution();
+        }
+
 
         public List<TaskInfoView> GetTarefas()
         {
             return _tarefaManager.GetListTaskInfo();
         }
 
-        public void AddTarefaTest()
-        {
-            _tarefaManager.AddTask(new Tarefa
-            {
-                IdTarefa = Guid.NewGuid().ToString(),
-                PedidoTarefa = DateTime.Now,
-                Status = "Solicitado"
-            });
-        }
-
-        public void CompleteTarefaTest()
-        {
-            var teste = _tarefaManager.GetTaskNotInExecution();
-            if (teste != null)
-            {
-                _tarefaManager.CompleteTask(teste);
-            }
-        }
 
         public void UpdateTarefaTest()
         {

@@ -23,11 +23,11 @@ namespace TaskTracker.Infrastructure.ConnectionsServices
             _connection.StartAsync();
         }
 
-        public async void AddTaskTeste()
+        public async void AddTarefa(Tarefa tarefa)
         {
             try
             {
-                await _connection.InvokeAsync("AddTarefaTest");
+                await _connection.InvokeAsync("AddNewTarefa", tarefa);
             }
             catch (Exception ex)
             {
@@ -71,7 +71,7 @@ namespace TaskTracker.Infrastructure.ConnectionsServices
 
         public async void CompleteTask(Tarefa tarefa)
         {
-            await _connection.InvokeAsync("");
+            await _connection.InvokeAsync("CompleteTarefa",tarefa);
         }
     }
 }

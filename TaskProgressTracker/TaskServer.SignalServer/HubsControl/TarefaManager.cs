@@ -24,6 +24,9 @@ namespace TaskServer.SignalServer.HubsControl
 
         public bool AddTask(Tarefa task)
         {
+            task.IdTarefa = Guid.NewGuid().ToString();
+            task.PedidoTarefa = DateTime.Now;
+            task.Status = "Solicitado";
             if(tasks.TryAdd(task.IdTarefa, task))
             {
                 _interfaceHubControl.UIAddTask(ConvertToTaskInfo(tasks[task.IdTarefa]));
