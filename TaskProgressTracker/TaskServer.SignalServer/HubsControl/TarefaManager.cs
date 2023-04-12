@@ -29,6 +29,7 @@ namespace TaskServer.SignalServer.HubsControl
             task.Status = "Solicitado";
             if(tasks.TryAdd(task.IdTarefa, task))
             {
+                //Operação de banco - adiciona no banco
                 _interfaceHubControl.UIAddTask(ConvertToTaskInfo(tasks[task.IdTarefa]));
                 return true;
             }
@@ -42,6 +43,7 @@ namespace TaskServer.SignalServer.HubsControl
             if(tasks.TryGetValue(task.IdTarefa, out taskInList)){
 
                 if(tasks.TryUpdate(task.IdTarefa, task, taskInList)){
+                    //Operação de banco - fazer atualização
                     _interfaceHubControl.UIUpdateTask(ConvertToTaskInfo(tasks[task.IdTarefa]));
                 }
             }
@@ -56,6 +58,7 @@ namespace TaskServer.SignalServer.HubsControl
             {
                 if (tasks.TryUpdate(tarefa.IdTarefa, tarefa, taskInList))
                 {
+                    //Operação de banco - att status e hora de inicio no banco
                     _interfaceHubControl.UIUpdateTask(ConvertToTaskInfo(tarefa));
                     return true;
                 }
@@ -70,6 +73,7 @@ namespace TaskServer.SignalServer.HubsControl
             taskToUpdate.Status = status;
             if (tasks.TryUpdate(idTarefa, taskToUpdate, tasks[idTarefa]))
             {
+                //Operação de bancp - att status da tarefa
                 _interfaceHubControl.UIUpdateTask(ConvertToTaskInfo(tasks[idTarefa]));
                 return true;
             }
@@ -83,8 +87,9 @@ namespace TaskServer.SignalServer.HubsControl
             if (tasks.TryGetValue(task.IdTarefa, out taskInList))
             {
 
-                if(tasks.TryUpdate(task.IdTarefa, task, taskInList))
+                if(tasks.TryRemove(task.IdTarefa, out taskInList))
                 {
+                    //Operação de banco - att como concluído
                     _interfaceHubControl.UIUpdateTask(ConvertToTaskInfo(task));
                 }
             }

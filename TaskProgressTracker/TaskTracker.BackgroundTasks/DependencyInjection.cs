@@ -1,12 +1,12 @@
 using TaskTracker.BackgroundTasks;
-using TaskTracker.Infrastructure.ConnectionsServices;
-using TaskTracker.Infrastructure.Interfaces;
+using TaskTracker.Infrastructure;
 
 IHost host = Host.CreateDefaultBuilder(args)
-    .ConfigureServices(services =>
+    .ConfigureServices((hostContext, services) =>
     {
-        services.AddHostedService<CheckerOldTasks>();
-        services.AddSingleton<IConnectionTaskServer, ConnectionTaskServer>();
+        services.AddHostedService<CheckerNewTasks>();
+        services.AddInfrastructurePersistence(hostContext.Configuration);
+        services.AddInfrastructureConnections();
     })
     .Build();
 

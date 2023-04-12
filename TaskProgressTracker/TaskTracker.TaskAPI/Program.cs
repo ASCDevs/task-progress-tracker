@@ -1,5 +1,4 @@
-using TaskTracker.Infrastructure.ConnectionsServices;
-using TaskTracker.Infrastructure.Interfaces;
+using TaskTracker.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,7 +8,8 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddSingleton<IConnectionTaskServer, ConnectionTaskServer>();
+builder.Services.AddInfrastructurePersistence(builder.Configuration);
+builder.Services.AddInfrastructureConnections();
 
 var app = builder.Build();
 

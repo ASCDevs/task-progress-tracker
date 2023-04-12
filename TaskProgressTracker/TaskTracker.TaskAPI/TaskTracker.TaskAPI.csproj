@@ -14,7 +14,6 @@
   <ItemGroup>
     <ProjectReference Include="..\TaskTracker.Domain\TaskTracker.Domain.csproj" />
     <ProjectReference Include="..\TaskTracker.Infrastructure\TaskTracker.Infrastructure.csproj" />
-    <ProjectReference Include="..\TaskTracker.Persistence\TaskTracker.Persistence.csproj" />
   </ItemGroup>
 
 </Project>

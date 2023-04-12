@@ -11,11 +11,11 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace TaskTracker.BackgroundTasks
 {
-    public class CheckerOldTasks : BackgroundService
+    public class CheckerNewTasks : BackgroundService
     {
-        private readonly ILogger<CheckerOldTasks> _logger;
+        private readonly ILogger<CheckerNewTasks> _logger;
         private readonly IConnectionTaskServer _taskServer;
-        public CheckerOldTasks(ILogger<CheckerOldTasks> logger, IConnectionTaskServer taskServer)
+        public CheckerNewTasks(ILogger<CheckerNewTasks> logger, IConnectionTaskServer taskServer)
         {
             _logger = logger;
             _taskServer = taskServer;
