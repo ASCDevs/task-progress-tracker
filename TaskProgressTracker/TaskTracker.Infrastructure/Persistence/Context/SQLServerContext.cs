@@ -22,9 +22,7 @@ namespace TaskTracker.Infrastructure.Persistence.Context
         {
             options.UseSqlServer(_configuration.GetConnectionString("SQLServerConn"));
         }
-
-        //public DbSet<Tarefa> Tarefas { get; set; }
-
+        public DbSet<Tarefa> Tarefas { get; set; }
 
     }
 }

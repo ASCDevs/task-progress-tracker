@@ -10,7 +10,7 @@ namespace TaskTracker.Infrastructure.Interfaces
 {
     public interface IConnectionTaskServer
     {
-        void AddTarefa(Tarefa tarefa);
+        Task<bool> AddTarefa(Tarefa tarefa);
         void StartTask(Tarefa tarefa);
         void UpdateTask(Tarefa tarefa);
         void CompleteTask(Tarefa tarefa);

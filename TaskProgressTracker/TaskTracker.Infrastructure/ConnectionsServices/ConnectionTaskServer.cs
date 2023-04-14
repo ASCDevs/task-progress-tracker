@@ -23,15 +23,16 @@ namespace TaskTracker.Infrastructure.ConnectionsServices
             _connection.StartAsync();
         }
 
-        public async void AddTarefa(Tarefa tarefa)
+        public async Task<bool> AddTarefa(Tarefa tarefa)
         {
             try
             {
-                await _connection.InvokeAsync("AddNewTarefa", tarefa);
+                return await _connection.InvokeAsync<bool>("AddNewTarefa", tarefa);
             }
             catch (Exception ex)
             {
                 _logger.LogError("Erro API > Signal : " + ex.Message);
+                return false;
             }
         }
 

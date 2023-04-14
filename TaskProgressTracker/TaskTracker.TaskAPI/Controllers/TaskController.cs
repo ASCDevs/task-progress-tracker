@@ -2,6 +2,7 @@
 using TaskTracker.Domain;
 using TaskTracker.Domain.Contracts;
 using TaskTracker.Domain.Entities;
+using TaskTracker.Domain.Repositories;
 using TaskTracker.Infrastructure.ConnectionsServices;
 using TaskTracker.Infrastructure.Interfaces;
 
@@ -15,61 +16,42 @@ namespace TaskTracker.TaskAPI.Controllers
     {
         private readonly ILogger<TaskController> _logger;
         private readonly IConnectionTaskServer _taskServer;
+        private readonly ITarefaRepo _tarefaRepo;
 
-        public TaskController(ILogger<TaskController> logger, IConnectionTaskServer taskServer)
+        public TaskController(ILogger<TaskController> logger, IConnectionTaskServer taskServer, ITarefaRepo tarefaRepo)
         {
             _logger = logger;
             _taskServer = taskServer;
+            _tarefaRepo = tarefaRepo;
         }
         // GET: api/<TaskController>
-        [HttpGet]
+        [HttpGet("inmemory")]
         public async Task<List<TaskInfoView>> Get()
         {
             return await _taskServer.GetTasksOnInfoView();
         }
 
-        // GET api/<TaskController>/5
-        [HttpGet("{id}")]
-        public Tarefa Get(string id)
+        [HttpGet("saved")]
+        public async Task<List<Tarefa>> GetSaved()
         {
-            //Tarefa tarefa = TasksEmExecucao.TaskList.FirstOrDefault(t => t.Value.IdTarefa == id).Value;
-            return null;
+            return _tarefaRepo.GetAll();
         }
 
         // POST api/<TaskController>
         [HttpPost]
         public void Post([FromBody] TarefaRequest tarefa)
         {
-
-            _taskServer.AddTarefa(new Tarefa
+            var novaTask = new Tarefa
             {
                 NomeTarefa = tarefa.NomeTarefa
-            });
+            };
+
+            _tarefaRepo.Add(novaTask);
+            _taskServer.AddTarefa(novaTask);
         }
 
-        // PUT api/<TaskController>/5
-        [HttpPut]
-        public void Put([FromBody] TarefaRequest tarefa)
-        {
-            _logger.LogInformation("Solicitado atualização");
-        }
+        //Att tarefa
 
-        // DELETE api/<TaskController>/5
-        [HttpDelete("{id}")]
-        public Tarefa Delete(string id)
-        {
-            //Tarefa tarefaRemovida;
-            //if (TasksEmExecucao.TaskList.TryRemove(id, out tarefaRemovida)){
-            //    return tarefaRemovida;
-            //}
-
-            return null;
-        }
-
-        [HttpGet("total")]
-        public int TotalTarefas()
-        {
-            return _taskServer.CountTasks();
-        }
+        //Deletar tarefa (Cancelar tarefa)
     }
 }

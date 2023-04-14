@@ -4,6 +4,7 @@ using TaskServer.SignalServer.Hubs;
 using TaskServer.SignalServer.Interfaces;
 using TaskTracker.Domain;
 using TaskTracker.Domain.Entities;
+using TaskTracker.Domain.Repositories;
 
 namespace TaskServer.SignalServer.HubsControl
 {
@@ -13,13 +14,15 @@ namespace TaskServer.SignalServer.HubsControl
         private readonly IInterfaceHubControl _interfaceHubControl;
         private readonly ConcurrentDictionary<string, Tarefa> tasks = new();
         private readonly ILogger<TarefaManager> _logger;
+        private readonly ITarefaRepo _tarefaRepo;
         private const int nrTasksPerCall = 3;
 
-        public TarefaManager(ITarefaHubControl tarefaHubControl, IInterfaceHubControl interfaceHubControl, ILogger<TarefaManager> logger)
+        public TarefaManager(ITarefaHubControl tarefaHubControl, IInterfaceHubControl interfaceHubControl, ILogger<TarefaManager> logger, ITarefaRepo tarefaRepo)
         {
             _interfaceHubControl = interfaceHubControl;
             _tarefaHubControl = tarefaHubControl;
             _logger = logger;
+            _tarefaRepo = tarefaRepo;
         }
 
         public bool AddTask(Tarefa task)
@@ -29,8 +32,8 @@ namespace TaskServer.SignalServer.HubsControl
             task.Status = "Solicitado";
             if(tasks.TryAdd(task.IdTarefa, task))
             {
-                //Operação de banco - adiciona no banco
-                _interfaceHubControl.UIAddTask(ConvertToTaskInfo(tasks[task.IdTarefa]));
+                _tarefaRepo.Update(task);
+                _interfaceHubControl.UIAddTask(ConvertToTaskInfo(task));
                 return true;
             }
                 
@@ -43,8 +46,8 @@ namespace TaskServer.SignalServer.HubsControl
             if(tasks.TryGetValue(task.IdTarefa, out taskInList)){
 
                 if(tasks.TryUpdate(task.IdTarefa, task, taskInList)){
-                    //Operação de banco - fazer atualização
-                    _interfaceHubControl.UIUpdateTask(ConvertToTaskInfo(tasks[task.IdTarefa]));
+                    _tarefaRepo.Update(task);
+                    _interfaceHubControl.UIUpdateTask(ConvertToTaskInfo(task));
                 }
             }
         }
@@ -58,7 +61,7 @@ namespace TaskServer.SignalServer.HubsControl
             {
                 if (tasks.TryUpdate(tarefa.IdTarefa, tarefa, taskInList))
                 {
-                    //Operação de banco - att status e hora de inicio no banco
+                    _tarefaRepo.Update(tarefa);
                     _interfaceHubControl.UIUpdateTask(ConvertToTaskInfo(tarefa));
                     return true;
                 }
@@ -69,14 +72,21 @@ namespace TaskServer.SignalServer.HubsControl
 
         public bool ChangeTaskStatus(string idTarefa, string status)
         {
-            Tarefa taskToUpdate = tasks[idTarefa];
-            taskToUpdate.Status = status;
-            if (tasks.TryUpdate(idTarefa, taskToUpdate, tasks[idTarefa]))
+            Tarefa taskToUpdate;
+            Tarefa taskInList;
+            tasks.TryGetValue(idTarefa, out taskInList);
+            if(taskInList != null)
             {
-                //Operação de bancp - att status da tarefa
-                _interfaceHubControl.UIUpdateTask(ConvertToTaskInfo(tasks[idTarefa]));
-                return true;
+                taskToUpdate = taskInList;
+                taskToUpdate.Status = status;
+                if (tasks.TryUpdate(idTarefa, taskToUpdate, taskInList))
+                {
+                    _tarefaRepo.Update(taskToUpdate);
+                    _interfaceHubControl.UIUpdateTask(ConvertToTaskInfo(taskToUpdate));
+                    return true;
+                }
             }
+            
             return false;
         }
 
@@ -89,7 +99,7 @@ namespace TaskServer.SignalServer.HubsControl
 
                 if(tasks.TryRemove(task.IdTarefa, out taskInList))
                 {
-                    //Operação de banco - att como concluído
+                    _tarefaRepo.Update(task);
                     _interfaceHubControl.UIUpdateTask(ConvertToTaskInfo(task));
                 }
             }

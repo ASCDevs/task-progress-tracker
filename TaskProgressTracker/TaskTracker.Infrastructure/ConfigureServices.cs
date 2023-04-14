@@ -1,14 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using TaskTracker.Domain.Repositories;
 using TaskTracker.Infrastructure.ConnectionsServices;
 using TaskTracker.Infrastructure.Interfaces;
 using TaskTracker.Infrastructure.Persistence.Context;
+using TaskTracker.Infrastructure.Persistence.Repositories;
 
 namespace TaskTracker.Infrastructure
 {
@@ -18,7 +15,7 @@ namespace TaskTracker.Infrastructure
         {
             services.AddDbContext<SQLServerContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("SqlServerConn")));
-
+            services.AddSingleton<ITarefaRepo, TarefaRepo>();
 
             return services;
         }

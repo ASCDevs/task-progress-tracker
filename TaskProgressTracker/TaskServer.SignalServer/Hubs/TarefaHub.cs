@@ -67,10 +67,10 @@ namespace TaskServer.SignalServer.Hubs
         }
 
         //Recebe a tarefa da API
-        public void AddNewTarefa(Tarefa task)
+        public bool AddNewTarefa(Tarefa task)
         {
             //Encaminha para o Tarefa manager adicionar na lista
-            _tarefaManager.AddTask(task);
+            return _tarefaManager.AddTask(task);
         }
 
         public void StartTarefa(Tarefa task)

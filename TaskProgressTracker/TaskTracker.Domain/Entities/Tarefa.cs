@@ -15,11 +15,8 @@ namespace TaskTracker.Domain.Entities
         [Column("id")]
         public long Id { get; set; }
         [Column("id_tarefa")]
-        [Required]
         public string? IdTarefa { get; set; }
         [Column("nm_tarefa")]
-        [Required]
-        [StringLength(500)]
         public string? NomeTarefa { get; set; }
         [Column("dt_pedido_tarefa")]
         public DateTime? PedidoTarefa { get; set; }
@@ -27,6 +24,7 @@ namespace TaskTracker.Domain.Entities
         public DateTime? InicioTarefa { get; set; }
         [Column("dt_fim_tarefa")]
         public DateTime? FimTarefa { get; set; }
+        [Column("status")]
         public string? Status { get; set; }
 
     }
