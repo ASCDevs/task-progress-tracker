@@ -43,7 +43,7 @@ namespace TaskTracker.TaskAPI.Controllers
         {
             var novaTask = new Tarefa
             {
-                NomeTarefa = tarefa.NomeTarefa
+                NomeTarefa = tarefa.NomeTarefa,
             };
 
             _tarefaRepo.Add(novaTask);

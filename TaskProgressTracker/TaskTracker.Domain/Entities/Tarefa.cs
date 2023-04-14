@@ -13,7 +13,7 @@ namespace TaskTracker.Domain.Entities
     {
         [Key]
         [Column("id")]
-        public long Id { get; set; }
+        public int Id { get; set; }
         [Column("id_tarefa")]
         public string? IdTarefa { get; set; }
         [Column("nm_tarefa")]

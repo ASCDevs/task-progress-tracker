@@ -114,6 +114,12 @@ namespace TaskServer.SignalServer.HubsControl
             return tasks.FirstOrDefault(x => x.Value.InicioTarefa == null && x.Value.FimTarefa == null).Value;
         }
 
+        public Tarefa GetTaskNotExecutedInDB()
+        {
+            throw new NotImplementedException();
+        }
+
+
         public List<Tarefa> GetTasksNotInExecution()
         {
             return tasks.Where(t => t.Value.InicioTarefa == null && t.Value.FimTarefa == null).Select(x => x.Value).Take(3).ToList();

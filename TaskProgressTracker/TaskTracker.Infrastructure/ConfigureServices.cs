@@ -13,8 +13,7 @@ namespace TaskTracker.Infrastructure
     {
         public static IServiceCollection AddInfrastructurePersistence(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<SQLServerContext>(options =>
-                options.UseSqlServer(configuration.GetConnectionString("SqlServerConn")));
+            services.AddSingleton<SQLServerContext>();
             services.AddSingleton<ITarefaRepo, TarefaRepo>();
 
             return services;
