@@ -47,59 +47,14 @@ namespace TaskServer.SignalServer.Hubs
         }
 
 
-        public void UpdateTarefaTest()
-        {
-            var teste = _tarefaManager.GetTaskNotInExecution();
-            if (teste != null)
-            {
-                if (teste.Status == "Solicitado")
-                {
-                    teste.Status = "Passo 1";
-                }
-                else
-                {
-                    int n = Int32.Parse(teste.Status.Substring(teste.Status.Length-1));
-                    n++;
-                    teste.Status = "Passo " + n;
-                }
-                _tarefaManager.UpdateTask(teste);
-            }
-        }
-
-        //Recebe a tarefa da API
-        public bool AddNewTarefa(Tarefa task)
-        {
-            //Encaminha para o Tarefa manager adicionar na lista
-            return _tarefaManager.AddTask(task);
-        }
-
-        public void StartTarefa(Tarefa task)
-        {
-            _tarefaManager.StartTask(task);
-        }
-
         public void UpdateTarefa(Tarefa task)
         {
             _tarefaManager.UpdateTask(task);
         }
 
-        public void CompleteTarefa(Tarefa task)
+        public void UpdateUI(Tarefa task)
         {
-            _tarefaManager.CompleteTask(task);
-        }
-
-        public Tarefa GetTarefaToExecute()
-        {
-            return _tarefaManager.GetTaskNotInExecution();
-        }
-
-        public bool ChangeTaskStatus(string idTarefa, string status)
-        {
-            if(_tarefaManager.ChangeTaskStatus(idTarefa, status)) return true;
-
-            _logger.LogError($"Erro change task status: {status} - id: {idTarefa}");
-
-            return false;
+            _tarefaManager.UpdateUI(task);
         }
 
         public override async Task OnDisconnectedAsync(Exception? exception)

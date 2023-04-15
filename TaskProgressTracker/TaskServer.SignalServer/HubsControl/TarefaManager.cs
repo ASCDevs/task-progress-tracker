@@ -12,10 +12,9 @@ namespace TaskServer.SignalServer.HubsControl
     {
         private readonly ITarefaHubControl _tarefaHubControl;
         private readonly IInterfaceHubControl _interfaceHubControl;
-        private readonly ConcurrentDictionary<string, Tarefa> tasks = new();
+        //private readonly ConcurrentDictionary<string, Tarefa> tasks = new();
         private readonly ILogger<TarefaManager> _logger;
         private readonly ITarefaRepo _tarefaRepo;
-        private const int nrTasksPerCall = 3;
 
         public TarefaManager(ITarefaHubControl tarefaHubControl, IInterfaceHubControl interfaceHubControl, ILogger<TarefaManager> logger, ITarefaRepo tarefaRepo)
         {
@@ -23,106 +22,39 @@ namespace TaskServer.SignalServer.HubsControl
             _tarefaHubControl = tarefaHubControl;
             _logger = logger;
             _tarefaRepo = tarefaRepo;
-        }
-
-        public bool AddTask(Tarefa task)
-        {
-            task.IdTarefa = Guid.NewGuid().ToString();
-            task.PedidoTarefa = DateTime.Now;
-            task.Status = "Solicitado";
-            if(tasks.TryAdd(task.IdTarefa, task))
-            {
-                _tarefaRepo.Update(task);
-                _interfaceHubControl.UIAddTask(ConvertToTaskInfo(task));
-                return true;
-            }
-                
-            return false;
+            _logger.LogInformation("[INSTANCIADO] - Tarefa manager foi instanciada");
         }
 
         public void UpdateTask(Tarefa task)
         {
-            Tarefa taskInList;
-            if(tasks.TryGetValue(task.IdTarefa, out taskInList)){
+            var tarefaOk = _tarefaRepo.Update(task);
+            if(tarefaOk != null ) _interfaceHubControl.UIUpdateTask(ConvertToTaskInfo(task));
+        }
 
-                if(tasks.TryUpdate(task.IdTarefa, task, taskInList)){
-                    _tarefaRepo.Update(task);
-                    _interfaceHubControl.UIUpdateTask(ConvertToTaskInfo(task));
-                }
-            }
+        public void UpdateUI(Tarefa task)
+        {
+            _interfaceHubControl.UIUpdateTask(ConvertToTaskInfo(task));
         }
 
         public bool StartTask(Tarefa tarefa)
         {
-            Tarefa taskInList;
-            tasks.TryGetValue(tarefa.IdTarefa, out taskInList);
-
-            if(taskInList != null)
+            var tarefaOk = _tarefaRepo.Update(tarefa);
+            if(tarefaOk != null)
             {
-                if (tasks.TryUpdate(tarefa.IdTarefa, tarefa, taskInList))
-                {
-                    _tarefaRepo.Update(tarefa);
-                    _interfaceHubControl.UIUpdateTask(ConvertToTaskInfo(tarefa));
-                    return true;
-                }
+                _interfaceHubControl.UIUpdateTask(ConvertToTaskInfo(tarefa));
+                return true;
             }
-            
             return false ;
-        }
-
-        public bool ChangeTaskStatus(string idTarefa, string status)
-        {
-            Tarefa taskToUpdate;
-            Tarefa taskInList;
-            tasks.TryGetValue(idTarefa, out taskInList);
-            if(taskInList != null)
-            {
-                taskToUpdate = taskInList;
-                taskToUpdate.Status = status;
-                if (tasks.TryUpdate(idTarefa, taskToUpdate, taskInList))
-                {
-                    _tarefaRepo.Update(taskToUpdate);
-                    _interfaceHubControl.UIUpdateTask(ConvertToTaskInfo(taskToUpdate));
-                    return true;
-                }
-            }
-            
-            return false;
-        }
-
-        public void CompleteTask(Tarefa task)
-        {
-            Tarefa taskInList;
-
-            if (tasks.TryGetValue(task.IdTarefa, out taskInList))
-            {
-
-                if(tasks.TryRemove(task.IdTarefa, out taskInList))
-                {
-                    _tarefaRepo.Update(task);
-                    _interfaceHubControl.UIUpdateTask(ConvertToTaskInfo(task));
-                }
-            }
         }
 
         public List<TaskInfoView> GetListTaskInfo()
         {
-            return tasks.Select(x => ConvertToTaskInfo(x.Value)).ToList();
+            return _tarefaRepo.GetAll().Select(x => ConvertToTaskInfo(x)).ToList();
         }
-        public Tarefa GetTaskNotInExecution()
-        {
-            return tasks.FirstOrDefault(x => x.Value.InicioTarefa == null && x.Value.FimTarefa == null).Value;
-        }
-
-        public Tarefa GetTaskNotExecutedInDB()
-        {
-            throw new NotImplementedException();
-        }
-
 
         public List<Tarefa> GetTasksNotInExecution()
         {
-            return tasks.Where(t => t.Value.InicioTarefa == null && t.Value.FimTarefa == null).Select(x => x.Value).Take(3).ToList();
+            return _tarefaRepo.GetNotExecuted();
         }
 
         private TaskInfoView ConvertToTaskInfo(Tarefa task)

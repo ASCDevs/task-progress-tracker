@@ -25,7 +25,7 @@ namespace TaskTracker.TaskAPI.Controllers
             _tarefaRepo = tarefaRepo;
         }
         // GET: api/<TaskController>
-        [HttpGet("inmemory")]
+        [HttpGet("inexecution")]
         public async Task<List<TaskInfoView>> Get()
         {
             return await _taskServer.GetTasksOnInfoView();
@@ -45,9 +45,16 @@ namespace TaskTracker.TaskAPI.Controllers
             {
                 NomeTarefa = tarefa.NomeTarefa,
             };
-
-            _tarefaRepo.Add(novaTask);
-            _taskServer.AddTarefa(novaTask);
+            try
+            {
+                var tarefaOk  = _tarefaRepo.Add(novaTask);
+                if (tarefaOk != null) _taskServer.UpdateUI(tarefaOk);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("[Erro] Erro ao adicionar> " + ex.Message);
+            }
+            
         }
 
         //Att tarefa

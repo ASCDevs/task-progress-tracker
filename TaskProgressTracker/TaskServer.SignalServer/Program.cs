@@ -2,6 +2,7 @@ using TaskServer.SignalServer.Hubs;
 using TaskServer.SignalServer.HubsControl;
 using TaskServer.SignalServer.Interfaces;
 using TaskTracker.Infrastructure;
+using TaskTracker.Infrastructure.Persistence.Context;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +13,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddSignalR();
 builder.Services.AddSingleton<IInterfaceHubControl, InterfaceHubControl>();
 builder.Services.AddSingleton<ITarefaHubControl, TarefaHubControl>();
-builder.Services.AddSingleton<ITarefaManager, TarefaManager>();
+builder.Services.AddScoped<ITarefaManager, TarefaManager>();
+builder.Services.AddDbContext<SQLServerContext>();
 builder.Services.AddInfrastructurePersistence(builder.Configuration);
 builder.Services.AddCors(options => options.AddPolicy("CorsPolicy",
         builder =>

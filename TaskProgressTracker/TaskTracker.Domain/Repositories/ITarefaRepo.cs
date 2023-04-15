@@ -9,8 +9,9 @@ namespace TaskTracker.Domain.Repositories
 {
     public interface ITarefaRepo
     {
-        void Add(Tarefa tarefa);
-        void Update(Tarefa tarefa);
+        Tarefa Add(Tarefa tarefa);
+        Tarefa Update(Tarefa tarefa);
         List<Tarefa> GetAll();
+        List<Tarefa> GetNotExecuted();
     }
 }

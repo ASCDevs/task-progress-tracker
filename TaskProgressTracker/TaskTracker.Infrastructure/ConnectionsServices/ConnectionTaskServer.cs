@@ -23,27 +23,14 @@ namespace TaskTracker.Infrastructure.ConnectionsServices
             _connection.StartAsync();
         }
 
-        public async Task<bool> AddTarefa(Tarefa tarefa)
-        {
-            try
-            {
-                return await _connection.InvokeAsync<bool>("AddNewTarefa", tarefa);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("Erro API > Signal : " + ex.Message);
-                return false;
-            }
-        }
-
-        public async void StartTask(Tarefa tarefa)
-        {
-            await _connection.InvokeAsync("StartTarefa",tarefa);
-        }
-
         public async void UpdateTask(Tarefa tarefa)
         {
             await _connection.InvokeAsync("UpdateTarefa", tarefa);
+        }
+
+        public async void UpdateUI(Tarefa tarefa)
+        {
+            await _connection.InvokeAsync("UpdateUI", tarefa);
         }
 
         public async Task<List<TaskInfoView>> GetTasksOnInfoView()
@@ -68,11 +55,6 @@ namespace TaskTracker.Infrastructure.ConnectionsServices
         public async Task<List<Tarefa>> GetTasksObj()
         {
             return await _connection.InvokeAsync<List<Tarefa>>("GetTarefasToDo");
-        }
-
-        public async void CompleteTask(Tarefa tarefa)
-        {
-            await _connection.InvokeAsync("CompleteTarefa",tarefa);
         }
     }
 }

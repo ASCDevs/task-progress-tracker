@@ -47,7 +47,7 @@ namespace TaskTracker.BackgroundTasks
             tarefa.InicioTarefa = DateTime.Now;
             tarefa.Status = "Em progresso - Fase 1";
 
-            _taskServer.StartTask(tarefa);
+            _taskServer.UpdateTask(tarefa);
             
             int intervalo = intervalos[rdn.Next(intervalos.Length)];
             _logger.LogInformation($"{tarefa.NomeTarefa} - Intervalo: {intervalo}");
@@ -72,7 +72,7 @@ namespace TaskTracker.BackgroundTasks
             tarefa.Status = "Concluído";
             tarefa.FimTarefa = DateTime.Now;
             _logger.LogInformation($"{tarefa.NomeTarefa} - Concluído");
-            _taskServer.CompleteTask(tarefa);
+            _taskServer.UpdateTask(tarefa);
         }
     }
 }
