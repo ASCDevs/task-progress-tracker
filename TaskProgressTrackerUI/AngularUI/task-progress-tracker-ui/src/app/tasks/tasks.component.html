@@ -1,0 +1,31 @@
+<p>Listagem de tarefas:</p>
+<!-- https://material.angular.io/components/paginator/api -->
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+    <ng-container matColumnDef="nome">
+        <th mat-header-cell *matHeaderCellDef> Nome.</th>
+        <td mat-cell *matCellDef="let tarefa">{{tarefa.nomeTarefa}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef> Status</th>
+        <td mat-cell *matCellDef="let tarefa">{{tarefa.status}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="dtPedido">
+        <th mat-header-cell *matHeaderCellDef> Dt. Pedido</th>
+        <td mat-cell *matCellDef="let tarefa">{{tarefa.dtPedido}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="dtInicio">
+        <th mat-header-cell *matHeaderCellDef> Dt. Inicio</th>
+        <td mat-cell *matCellDef="let tarefa">{{tarefa.dtInicio}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="dtFinal">
+        <th mat-header-cell *matHeaderCellDef> Dt. Final</th>
+        <td mat-cell *matCellDef="let tarefa">{{tarefa.dtFinal}}</td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
