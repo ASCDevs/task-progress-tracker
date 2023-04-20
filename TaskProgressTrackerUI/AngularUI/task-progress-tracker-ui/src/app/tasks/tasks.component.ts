@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { TasksSavedService } from '../tasks-saved.service';
 
 export interface Tarefa{
   nomeTarefa: string;
@@ -23,4 +24,14 @@ const ELEMENT_DATA: Tarefa[] = [
 export class TasksComponent {
   displayedColumns: string[] = ['nome', 'status', 'dtPedido', 'dtInicio','dtFinal'];
   dataSource = ELEMENT_DATA;
+
+  constructor(private tasksSavedService: TasksSavedService){
+    this.obterTasksSaved()
+  }
+
+  obterTasksSaved(){
+    this.tasksSavedService.obterTodos()
+    .then(carros => console.log(carros))
+    .catch(error => console.error(error))
+  }
 }

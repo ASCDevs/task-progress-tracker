@@ -12,9 +12,17 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<SQLServerContext>();
 builder.Services.AddInfrastructurePersistence(builder.Configuration);
 builder.Services.AddInfrastructureConnections();
+builder.Services.AddCors(options => options.AddPolicy("CorsPolicy",
+        builder =>
+        {
+            builder.AllowAnyHeader()
+                   .AllowAnyMethod()
+                   .SetIsOriginAllowed((host) => true)
+                   .AllowCredentials();
+        }));
 
 var app = builder.Build();
-
+app.UseCors("CorsPolicy");
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
