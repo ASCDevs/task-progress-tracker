@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { TasksSavedService } from '../tasks-saved.service';
 import { ITask } from '../ITasks';
+import * as SignalR from '@microsoft/signalr';
+import { API_SIGNAL_HUB } from 'src/environments/environment';
 
 export interface Tarefa{
   nomeTarefa: string;
@@ -28,6 +30,39 @@ export class TasksComponent {
 
   constructor(private tasksSavedService: TasksSavedService){
     this.obterTasksSaved()
+    //fazer recurso de atualização automático - deixar botão para ativar/desativar
+    //dar refresh na tabela chamando API e não adicionando novos itens via signalr
+  }
+
+  ngOnInit(){
+
+    const connection = new SignalR.HubConnectionBuilder()
+      .configureLogging(SignalR.LogLevel.Information)
+      .withUrl(API_SIGNAL_HUB)
+      .build();
+
+    connection.start().then(function(){
+      console.log('Hub SignalR connected')
+    }).catch(function (err){
+      return console.error(err.toString());
+    });
+
+    connection.on("updateCountUIs",(connectedUIsCount) =>{
+        console.log(connectedUIsCount)
+    })
+
+    connection.on("updateListaTarefas",(tarefas) =>{
+        console.log(tarefas)
+    })
+
+    connection.on("addMostRecentTask",(tarefa) =>{
+        console.log(tarefa)
+    })
+    
+    connection.on("updateTask",(tarefa) =>{
+        console.log(tarefa)
+    })
+
   }
 
   obterTasksSaved(){
