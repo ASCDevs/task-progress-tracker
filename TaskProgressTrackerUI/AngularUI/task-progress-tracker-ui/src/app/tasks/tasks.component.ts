@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { TasksSavedService } from '../tasks-saved.service';
+import { ITask } from '../ITasks';
 
 export interface Tarefa{
   nomeTarefa: string;
@@ -22,8 +23,8 @@ const ELEMENT_DATA: Tarefa[] = [
   styleUrls: ['./tasks.component.css']
 })
 export class TasksComponent {
-  displayedColumns: string[] = ['nome', 'status', 'dtPedido', 'dtInicio','dtFinal'];
-  dataSource = ELEMENT_DATA;
+  displayedColumns: string[] = ['nome', 'status', 'pedidoTarefa', 'inicioTarefa','fimTarefa'];
+  loadTasks!: ITask[];
 
   constructor(private tasksSavedService: TasksSavedService){
     this.obterTasksSaved()
@@ -31,7 +32,11 @@ export class TasksComponent {
 
   obterTasksSaved(){
     this.tasksSavedService.obterTodos()
-    .then(carros => console.log(carros))
+    .then(tasks => {
+      this.loadTasks = [];
+      tasks?.forEach(t => this.loadTasks.push(t));
+      console.log(this.loadTasks);
+    })
     .catch(error => console.error(error))
   }
 }

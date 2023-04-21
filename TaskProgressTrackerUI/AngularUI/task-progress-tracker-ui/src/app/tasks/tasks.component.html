@@ -1,6 +1,6 @@
 <p>Listagem de tarefas:</p>
 <!-- https://material.angular.io/components/paginator/api -->
-<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+<table mat-table [dataSource]="loadTasks" class="mat-elevation-z8">
     <ng-container matColumnDef="nome">
         <th mat-header-cell *matHeaderCellDef> Nome.</th>
         <td mat-cell *matCellDef="let tarefa">{{tarefa.nomeTarefa}}</td>
@@ -11,19 +11,19 @@
         <td mat-cell *matCellDef="let tarefa">{{tarefa.status}}</td>
     </ng-container>
 
-    <ng-container matColumnDef="dtPedido">
+    <ng-container matColumnDef="pedidoTarefa">
         <th mat-header-cell *matHeaderCellDef> Dt. Pedido</th>
-        <td mat-cell *matCellDef="let tarefa">{{tarefa.dtPedido}}</td>
+        <td mat-cell *matCellDef="let tarefa">{{tarefa.pedidoTarefa}}</td>
     </ng-container>
 
-    <ng-container matColumnDef="dtInicio">
+    <ng-container matColumnDef="inicioTarefa">
         <th mat-header-cell *matHeaderCellDef> Dt. Inicio</th>
-        <td mat-cell *matCellDef="let tarefa">{{tarefa.dtInicio}}</td>
+        <td mat-cell *matCellDef="let tarefa">{{tarefa.inicioTarefa}}</td>
     </ng-container>
 
-    <ng-container matColumnDef="dtFinal">
+    <ng-container matColumnDef="fimTarefa">
         <th mat-header-cell *matHeaderCellDef> Dt. Final</th>
-        <td mat-cell *matCellDef="let tarefa">{{tarefa.dtFinal}}</td>
+        <td mat-cell *matCellDef="let tarefa">{{tarefa.fimTarefa}}</td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
