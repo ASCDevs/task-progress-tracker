@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TaskTracker.Domain
+﻿namespace TaskTracker.Domain
 {
     public class TaskInfoView
     {
-        public string IdTask { get; set; }
-        public string TaskName { get; set; }
-        public string DtSolicitacao { get; set; }
-        public string DtInicio { get; set; }
-        public string DtFinalizacao { get; set; }
-        public string Status { get; set; }
+        public int id { get; set; }
+        public string idTask { get; set; }
+        public string taskName { get; set; }
+        public string dtSolicitacao { get; set; }
+        public string dtInicio { get; set; }
+        public string dtFinalizacao { get; set; }
+        public string status { get; set; }
     }
 }

@@ -1,9 +1,9 @@
 export interface ITask{
     id: number,
-    idTarefa: string,
-    nomeTarefa: string,
-    pedidoTarefa: Date,
-    inicioTarefa: Date,
-    fimTarefa: Date,
+    idTask: string,
+    taskName: string,
+    dtSolicitacao: string,
+    dtInicio: string,
+    dtFinalizacao: string,
     status: string
 }

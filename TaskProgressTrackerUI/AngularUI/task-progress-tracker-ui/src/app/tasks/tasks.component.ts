@@ -1,23 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { TasksSavedService } from '../tasks-saved.service';
 import { ITask } from '../ITasks';
 import * as SignalR from '@microsoft/signalr';
 import { API_SIGNAL_HUB } from 'src/environments/environment';
-
-export interface Tarefa{
-  nomeTarefa: string;
-  status: string;
-  dtPedido?: string;
-  dtInicio?: string;
-  dtFinal?: string;
-}
-
-const ELEMENT_DATA: Tarefa[] = [
-  { nomeTarefa: "Sushi", status: "Solicitado",dtPedido:"17/04/2023 21:15",dtInicio:"-",dtFinal:"-"},
-  { nomeTarefa: "HotRoll", status: "Concluído",dtPedido:"14/04/2023 21:15",dtInicio:"14/04/2023 21:30",dtFinal:"14/04/2023 22:30"},
-  { nomeTarefa: "Niguiri", status: "Preparando - fase 1",dtPedido:"09/04/2023 19:15",dtInicio:"09/04/2023 19:20",dtFinal:"-"},
-  { nomeTarefa: "Uramaki", status: "Preparando - fase 4",dtPedido:"01/04/2023 16:15",dtInicio:"01/04/2023 16:42",dtFinal:"-"},
-];
+import { MatTable } from '@angular/material/table';
 
 @Component({
   selector: 'app-tasks',
@@ -25,8 +11,10 @@ const ELEMENT_DATA: Tarefa[] = [
   styleUrls: ['./tasks.component.css']
 })
 export class TasksComponent {
-  displayedColumns: string[] = ['nome', 'status', 'pedidoTarefa', 'inicioTarefa','fimTarefa'];
+  displayedColumns: string[] = ['taskName', 'statusUm', 'dtSolicitacao', 'dtInicio','dtFinalizacao'];
   loadTasks!: ITask[];
+
+  @ViewChild(MatTable) table!: MatTable<ITask>;
 
   constructor(private tasksSavedService: TasksSavedService){
     this.obterTasksSaved()
@@ -54,13 +42,27 @@ export class TasksComponent {
     connection.on("updateListaTarefas",(tarefas) =>{
         console.log(tarefas)
     })
-
-    connection.on("addMostRecentTask",(tarefa) =>{
-        console.log(tarefa)
-    })
     
-    connection.on("updateTask",(tarefa) =>{
-        console.log(tarefa)
+    connection.on("updateTask",(tarefa: ITask) =>{
+      console.log("Tarefa update: ")
+      console.info(tarefa.taskName+" - "+tarefa.status);
+      let index = this.loadTasks.findIndex(x => x.idTask == tarefa.idTask);
+      if(index != -1){
+        console.log("Index: "+index);
+        //console.log("Antes: "+this.loadTasks[index].taskName+" - "+this.loadTasks[index].status);
+        this.loadTasks[index] = tarefa;
+        //console.log("Depois: "+this.loadTasks[index].taskName+" - "+this.loadTasks[index].status);
+        console.log(this.loadTasks)
+        this.table.renderRows();
+      }else{
+        console.log("Tarefa nova");
+        console.info(tarefa.taskName+" - "+tarefa.status);
+
+        this.loadTasks.push(tarefa);
+        console.log(this.loadTasks)
+        this.table.renderRows();
+      }
+      
     })
 
   }
@@ -74,4 +76,28 @@ export class TasksComponent {
     })
     .catch(error => console.error(error))
   }
+
+  addTestRow(){
+    let t: ITask = {
+        id: 1,
+        idTask: 'w0898=asidaisd-ajusidhjashd',
+        dtInicio: '25/04/2023',
+        dtSolicitacao: '23/04/2023',
+        dtFinalizacao: '27/04/2023',
+        status : 'OK',
+        taskName: 'SUPER TESTE !'
+    }
+    this.loadTasks.push(t)
+    console.log(this.loadTasks)
+    this.table.renderRows();
+  }
+
+  updateTestRow(){
+
+  }
+
+  removeTestRow(){
+
+  }
+  
 }

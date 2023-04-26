@@ -61,12 +61,13 @@ namespace TaskServer.SignalServer.HubsControl
         {
             return new TaskInfoView
             {
-                IdTask = task.IdTarefa ?? "-",
-                DtSolicitacao = task.PedidoTarefa?.ToString("dd/MM/yyyy HH:mm:ss") ?? "-",
-                DtFinalizacao = task.FimTarefa?.ToString("dd/MM/yyyy HH:mm:ss") ?? "-",
-                DtInicio = task.InicioTarefa?.ToString("dd/MM/yyyy HH:mm:ss") ?? "-",
-                Status = task.Status ?? "-",
-                TaskName = task.NomeTarefa ?? "-"
+                id = task.Id,
+                idTask = task.IdTarefa ?? "-",
+                dtSolicitacao = task.PedidoTarefa?.ToString("dd/MM/yyyy HH:mm:ss") ?? "-",
+                dtFinalizacao = task.FimTarefa?.ToString("dd/MM/yyyy HH:mm:ss") ?? "-",
+                dtInicio = task.InicioTarefa?.ToString("dd/MM/yyyy HH:mm:ss") ?? "-",
+                status = task.Status ?? "-",
+                taskName = task.NomeTarefa ?? "-"
             };
         }
 
