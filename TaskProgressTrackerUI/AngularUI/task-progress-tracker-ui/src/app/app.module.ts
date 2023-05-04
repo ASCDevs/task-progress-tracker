@@ -7,18 +7,26 @@ import { TasksComponent } from './tasks/tasks.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTableModule } from '@angular/material/table';
 import { HttpClientModule } from '@angular/common/http';
+import {MatButtonModule} from '@angular/material/button';
+import { ModalBaseComponent } from './modal-base/modal-base.component';
+
+const MaterialComponents = [
+  MatButtonModule,
+  MatTableModule
+]
 
 @NgModule({
   declarations: [
     AppComponent,
-    TasksComponent
+    TasksComponent,
+    ModalBaseComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    MatTableModule,
-    HttpClientModule
+    HttpClientModule,
+    ...MaterialComponents 
   ],
   providers: [],
   bootstrap: [AppComponent]

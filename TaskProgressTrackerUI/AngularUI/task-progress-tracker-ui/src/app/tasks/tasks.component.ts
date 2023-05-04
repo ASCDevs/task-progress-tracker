@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { TasksSavedService } from '../tasks-saved.service';
+import { TasksSavedService } from '../services/tasks-saved.service';
 import { ITask } from '../ITasks';
 import * as SignalR from '@microsoft/signalr';
 import { API_SIGNAL_HUB } from 'src/environments/environment';
@@ -77,27 +77,8 @@ export class TasksComponent {
     .catch(error => console.error(error))
   }
 
-  addTestRow(){
-    let t: ITask = {
-        id: 1,
-        idTask: 'w0898=asidaisd-ajusidhjashd',
-        dtInicio: '25/04/2023',
-        dtSolicitacao: '23/04/2023',
-        dtFinalizacao: '27/04/2023',
-        status : 'OK',
-        taskName: 'SUPER TESTE !'
-    }
-    this.loadTasks.push(t)
-    console.log(this.loadTasks)
-    this.table.renderRows();
-  }
-
-  updateTestRow(){
-
-  }
-
-  removeTestRow(){
-
+  openNewTaskWindow(){
+    console.log("Abrir modal para nova tarefa")
   }
   
 }

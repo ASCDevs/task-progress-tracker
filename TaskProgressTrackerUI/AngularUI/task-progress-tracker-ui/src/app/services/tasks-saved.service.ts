@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { API_TASKS_SAVED } from '../environments/environment';
-import { ITask } from './ITasks';
+import { API_TASKS_SAVED } from '../../environments/environment';
+import { ITask } from '../ITasks';
 
 @Injectable({
   providedIn: 'root'

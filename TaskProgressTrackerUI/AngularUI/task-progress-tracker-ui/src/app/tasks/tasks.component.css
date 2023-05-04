@@ -1,0 +1,13 @@
+.area-content{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.item-content{
+    max-width: 1200px;
+    width: 100%;
+}
+.area-buttons{
+    margin: 10px 0 10px 0;
+}
