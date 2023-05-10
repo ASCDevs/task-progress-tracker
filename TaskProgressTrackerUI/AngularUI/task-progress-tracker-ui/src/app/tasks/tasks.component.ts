@@ -4,6 +4,17 @@ import { ITask } from '../ITasks';
 import * as SignalR from '@microsoft/signalr';
 import { API_SIGNAL_HUB } from 'src/environments/environment';
 import { MatTable } from '@angular/material/table';
+import { MatDialog } from '@angular/material/dialog';
+import { AbstractControl, FormControl, FormGroupDirective, NgForm, Validators} from '@angular/forms';
+import { ErrorStateMatcher } from '@angular/material/core';
+
+export class MyErrorStateMatcher implements ErrorStateMatcher{
+  isErrorState(control: AbstractControl<any, any> | null, form: FormGroupDirective | NgForm | null): boolean {
+    const isSubmitted = form && form.submitted;
+    return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
+  }
+
+}
 
 @Component({
   selector: 'app-tasks',
@@ -13,10 +24,12 @@ import { MatTable } from '@angular/material/table';
 export class TasksComponent {
   displayedColumns: string[] = ['taskName', 'statusUm', 'dtSolicitacao', 'dtInicio','dtFinalizacao'];
   loadTasks!: ITask[];
+  nameTaskControl = new FormControl('', [Validators.required]);
+  matcher = new MyErrorStateMatcher();
 
   @ViewChild(MatTable) table!: MatTable<ITask>;
 
-  constructor(private tasksSavedService: TasksSavedService){
+  constructor(private tasksSavedService: TasksSavedService, public dialog: MatDialog){
     this.obterTasksSaved()
     //fazer recurso de atualização automático - deixar botão para ativar/desativar
     //dar refresh na tabela chamando API e não adicionando novos itens via signalr
@@ -78,7 +91,20 @@ export class TasksComponent {
   }
 
   openNewTaskWindow(){
-    console.log("Abrir modal para nova tarefa")
+    const dialogRef = this.dialog.open(NewTaskDialogComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`)
+    })
   }
   
 }
+
+@Component({
+  selector: 'dialog-content-example-dialog',
+  templateUrl: './newtask-content-dialog.html',
+  styleUrls: ['./newtask-contet-dialog.css']
+})
+export class NewTaskDialogComponent { }
+
+
