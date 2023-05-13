@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { TasksComponent, NewTaskDialogComponent,MyErrorStateMatcher } from './tasks/tasks.component';
@@ -11,12 +10,15 @@ import {MatButtonModule} from '@angular/material/button';
 import { ModalBaseComponent } from './modal-base/modal-base.component';
 import {MatDialogModule} from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
+import { FormsModule,ReactiveFormsModule} from '@angular/forms';
 
 const MaterialModules = [
   MatButtonModule,
   MatTableModule,
   MatDialogModule,
-  MatInputModule
+  MatInputModule,
+  FormsModule,
+  ReactiveFormsModule
 ]
 
 @NgModule({
@@ -24,7 +26,7 @@ const MaterialModules = [
     AppComponent,
     TasksComponent,
     ModalBaseComponent,
-    NewTaskDialogComponent,
+    NewTaskDialogComponent    
   ],
   imports: [
     BrowserModule,

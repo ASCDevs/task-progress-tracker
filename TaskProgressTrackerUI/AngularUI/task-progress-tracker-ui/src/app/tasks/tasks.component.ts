@@ -5,15 +5,14 @@ import * as SignalR from '@microsoft/signalr';
 import { API_SIGNAL_HUB } from 'src/environments/environment';
 import { MatTable } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
-import { AbstractControl, FormControl, FormGroupDirective, NgForm, Validators} from '@angular/forms';
+import {  FormControl, FormGroupDirective, NgForm, Validators } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 
-export class MyErrorStateMatcher implements ErrorStateMatcher{
-  isErrorState(control: AbstractControl<any, any> | null, form: FormGroupDirective | NgForm | null): boolean {
+export class MyErrorStateMatcher implements ErrorStateMatcher {
+  isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const isSubmitted = form && form.submitted;
     return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
   }
-
 }
 
 @Component({
@@ -105,6 +104,14 @@ export class TasksComponent {
   templateUrl: './newtask-content-dialog.html',
   styleUrls: ['./newtask-contet-dialog.css']
 })
-export class NewTaskDialogComponent { }
+export class NewTaskDialogComponent { 
+  taskNameFormControl = new FormControl('',[Validators.required]);
+
+  matcher = new MyErrorStateMatcher();
+
+  EnviarTarefa(){
+    console.log(this.taskNameFormControl.value)
+  }
+}
 
 
