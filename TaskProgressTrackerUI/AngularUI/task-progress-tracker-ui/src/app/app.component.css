@@ -1,0 +1,28 @@
+.container-header{
+    background-color: bisque;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.content-header{
+    background-color: darkorange;
+    max-width: 1200px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.container-header-desc{
+    background-color: aquamarine;
+    width: 300px;
+}
+
+.menu-header{
+    background-color: blueviolet;
+}
+
+.identidade-area{
+    display: flex;
+}
