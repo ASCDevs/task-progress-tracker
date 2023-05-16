@@ -1,6 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { TasksSavedService } from '../services/tasks-saved.service';
 import { ITask } from '../ITasks';
+import {ITaskSend } from '../ITaskSend';
 import * as SignalR from '@microsoft/signalr';
 import { API_SIGNAL_HUB } from 'src/environments/environment';
 import { MatTable } from '@angular/material/table';
@@ -106,11 +107,19 @@ export class TasksComponent {
 })
 export class NewTaskDialogComponent { 
   taskNameFormControl = new FormControl('',[Validators.required]);
-
   matcher = new MyErrorStateMatcher();
 
+  constructor(private tasksSavedService: TasksSavedService){
+
+  }
+
   EnviarTarefa(){
-    console.log(this.taskNameFormControl.value)
+    if(this.taskNameFormControl.valid){
+      const tarefa: ITaskSend = { NomeTarefa: this.taskNameFormControl.value! };
+      this.tasksSavedService.enviarTarefa(tarefa).subscribe(task => console.log(task))
+    }else{
+      console.log("Não está válida o nome da tarefa")
+    }
   }
 }
 
