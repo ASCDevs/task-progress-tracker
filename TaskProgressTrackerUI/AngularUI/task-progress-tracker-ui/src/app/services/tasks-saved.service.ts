@@ -25,8 +25,6 @@ export class TasksSavedService {
   }
 
   enviarTarefa(tarefa: ITaskSend) : Observable<ITaskSend>{
-    console.log("Tarefa a ser enviada:")
-    console.log(tarefa)
     
     return this.httpClient.post(`${API_SEND_TASK}`,tarefa)
       .pipe(

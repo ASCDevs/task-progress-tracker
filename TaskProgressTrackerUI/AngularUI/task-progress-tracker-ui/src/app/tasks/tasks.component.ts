@@ -49,30 +49,21 @@ export class TasksComponent {
     });
 
     connection.on("updateCountUIs",(connectedUIsCount) =>{
-        console.log(connectedUIsCount)
+        //console.log(connectedUIsCount)
     })
 
     connection.on("updateListaTarefas",(tarefas) =>{
-        console.log(tarefas)
+        //console.log(tarefas)
     })
     
     connection.on("updateTask",(tarefa: ITask) =>{
-      console.log("Tarefa update: ")
       console.info(tarefa.taskName+" - "+tarefa.status);
       let index = this.loadTasks.findIndex(x => x.idTask == tarefa.idTask);
       if(index != -1){
-        console.log("Index: "+index);
-        //console.log("Antes: "+this.loadTasks[index].taskName+" - "+this.loadTasks[index].status);
         this.loadTasks[index] = tarefa;
-        //console.log("Depois: "+this.loadTasks[index].taskName+" - "+this.loadTasks[index].status);
-        console.log(this.loadTasks)
         this.table.renderRows();
       }else{
-        console.log("Tarefa nova");
-        console.info(tarefa.taskName+" - "+tarefa.status);
-
         this.loadTasks.push(tarefa);
-        console.log(this.loadTasks)
         this.table.renderRows();
       }
       
@@ -85,7 +76,6 @@ export class TasksComponent {
     .then(tasks => {
       this.loadTasks = [];
       tasks?.forEach(t => this.loadTasks.push(t));
-      console.log(this.loadTasks);
     })
     .catch(error => console.error(error))
   }
@@ -116,7 +106,9 @@ export class NewTaskDialogComponent {
   EnviarTarefa(){
     if(this.taskNameFormControl.valid){
       const tarefa: ITaskSend = { NomeTarefa: this.taskNameFormControl.value! };
-      this.tasksSavedService.enviarTarefa(tarefa).subscribe(task => console.log(task))
+      this.tasksSavedService.enviarTarefa(tarefa).subscribe(()=>{
+        console.log("fechar janela")
+      })
     }else{
       console.log("Não está válida o nome da tarefa")
     }

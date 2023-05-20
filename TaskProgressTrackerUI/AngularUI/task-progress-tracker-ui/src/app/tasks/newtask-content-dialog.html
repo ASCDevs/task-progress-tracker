@@ -11,6 +11,6 @@
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <button mat-button mat-dialog-close>Cancelar</button>
-  <!-- [mat-dialog-close]="true" -->
-  <button mat-flat-button color="accent"  cdkFocusInitial (click)="EnviarTarefa()" [disabled]="!taskNameFormControl.valid">Enviar tarefa</button>
+  
+  <button mat-flat-button color="accent" [mat-dialog-close]="this.taskNameFormControl.valid"  cdkFocusInitial (click)="EnviarTarefa()" [disabled]="!taskNameFormControl.valid">Enviar tarefa</button>
 </mat-dialog-actions>
