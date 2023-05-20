@@ -1,12 +1,13 @@
 .container-header{
-    background-color: bisque;
     display: flex;
     flex-direction: row;
     justify-content: center;
+    -webkit-box-shadow: 0px 4px 5px 0px rgba(0,0,0,0.21);
+    -moz-box-shadow: 0px 4px 5px 0px rgba(0,0,0,0.21);
+    box-shadow: 0px 4px 5px 0px rgba(0,0,0,0.21);
 }
 
 .content-header{
-    background-color: darkorange;
     max-width: 1200px;
     width: 100%;
     display: flex;
@@ -15,14 +16,26 @@
 }
 
 .container-header-desc{
-    background-color: aquamarine;
     width: 300px;
+    padding: 10px;
 }
 
 .menu-header{
-    background-color: blueviolet;
+    
 }
 
 .identidade-area{
     display: flex;
+}
+
+.logo-area{
+    max-width: 60px;
+    display: flex;
+    margin-right: 10px;
+}
+
+.img-resize{
+    max-width: 100%;
+    height: auto;
+    align-self: center;
 }
