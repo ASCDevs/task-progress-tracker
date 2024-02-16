@@ -13,7 +13,8 @@ namespace TaskTracker.Infrastructure
     {
         public static IServiceCollection AddInfrastructurePersistence(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddScoped<ITarefaRepo, TarefaRepo>();
+            services.AddSingleton<DapperContext>();
+            services.AddScoped<ITarefaRepo, TarefaRepoDapper>();
 
             return services;
         }

@@ -1,3 +1,9 @@
+create database TasksTracker
+go
+
+use TasksTracker
+go
+
 CREATE TABLE TasksTracker.dbo.tarefas(
 	id int not null identity(1,1),
 	id_tarefa VARCHAR(300),
@@ -7,6 +13,7 @@ CREATE TABLE TasksTracker.dbo.tarefas(
 	dt_fim_tarefa DATETIME,
 	status varchar(500)
 )
+go
 
 SELECT 
 	nm_tarefa, 
